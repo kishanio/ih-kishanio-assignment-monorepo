@@ -1,23 +1,24 @@
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import { getCommonPageProps } from "../_app";
 import { medusaSDK } from "../../lib/medusa";
 import Image from "next/image";
 import BookingForm from "@/components/BookingForm";
+import { getServerSidePropsWithCommonProps } from "@/utils/SSR";
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const commonPageProps = await getCommonPageProps(context);
-  const params = context.params as { productId: string };
-  const medusaSDKProductResponse = await medusaSDK.store.product.retrieve(
-    params?.productId,
-    {
-      fields: "+variants.calculated_price",
-    }
-  );
+export const getServerSideProps = getServerSidePropsWithCommonProps(
+  async (context: GetServerSidePropsContext) => {
+    const params = context.params as { productId: string };
+    const medusaSDKProductResponse = await medusaSDK.store.product.retrieve(
+      params?.productId,
+      {
+        fields: "+variants.calculated_price",
+      }
+    );
 
-  return {
-    props: { product: medusaSDKProductResponse.product, ...commonPageProps },
-  };
-}
+    return {
+      props: { product: medusaSDKProductResponse.product }
+    };
+  }
+);
 
 export default function TrekPage(
   props: InferGetServerSidePropsType<typeof getServerSideProps>

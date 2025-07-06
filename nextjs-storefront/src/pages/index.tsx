@@ -1,16 +1,17 @@
 import ProductCard from "@/components/ProductCard";
 import { medusaSDK } from "@/lib/medusa";
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import { getCommonPageProps } from "./_app";
+import { getServerSidePropsWithCommonProps } from "@/utils/SSR";
+import { InferGetServerSidePropsType } from "next";
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const commonPageProps = await getCommonPageProps(context);
-  const medusaSDKProductResponse = await medusaSDK.store.product.list();
+export const getServerSideProps = getServerSidePropsWithCommonProps(
+  async () => {
+    const medusaSDKProductResponse = await medusaSDK.store.product.list();
 
-  return {
-    props: { products: medusaSDKProductResponse.products, ...commonPageProps },
-  };
-}
+    return {
+      props: { products: medusaSDKProductResponse.products },
+    };
+  }
+);
 
 export default function Home(
   props: InferGetServerSidePropsType<typeof getServerSideProps>

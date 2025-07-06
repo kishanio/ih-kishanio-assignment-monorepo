@@ -16,11 +16,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormField } from "./ui/form";
 import { parse as ParseDate } from "date-fns";
 import { useMutation } from "@tanstack/react-query";
-import { getCurrencySymbol } from "@/pages/_app";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import useAddToCartMutation from "./cart/useAddToCartMutation";
 import useAppContext from "./useAppContext";
+import { getCurrencySymbol } from "@/utils/currency";
 
 const ZBookingSchema = z.object({
   yearOption: z.string().min(1, "Year is required"),

@@ -1,27 +1,28 @@
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import { getCommonPageProps } from "./_app";
+import { InferGetServerSidePropsType } from "next";
 import { Button } from "@/components/ui/button";
 import Login from "@/components/auth/Login";
 import useAppContext from "@/components/useAppContext";
 import CartItem from "@/components/cart/CartItem";
+import { getServerSidePropsWithCommonProps } from "@/utils/SSR";
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const commonPageProps = await getCommonPageProps(context);
-
-  if (commonPageProps.cart === null) {
-    // If no cart exists, redirect to the home page
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
+export const getServerSideProps = getServerSidePropsWithCommonProps(
+  async (_context,commonProps) => {
+    if (commonProps.cart) {
+      return {
+        props: {}
+      }
+    } else {
+      return {
+        redirect: {
+          destination: "/",
+          permanent: false, 
+        },
+        props: {}
+      }
+    }
+    
   }
-
-  return {
-    props: { ...commonPageProps },
-  };
-}
+);
 
 export default function Cart(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
@@ -38,16 +39,22 @@ export default function Cart(
         finalize the trek booking.
       </p>
 
-      {
-        props.cart?.items?.map((item)=>{
-          return <CartItem key={`cart-item-${item.id}`} item={item} cart={props.cart} />
-        })
-      }
-      {!appContext.customer && <div className="my-10">
-        <Login>
-          <Button>Proceed with Login</Button>
-        </Login>
-      </div>}
+      {props.cart?.items?.map((item) => {
+        return (
+          <CartItem
+            key={`cart-item-${item.id}`}
+            item={item}
+            cart={props.cart}
+          />
+        );
+      })}
+      {!appContext.customer && (
+        <div className="my-10">
+          <Login>
+            <Button>Proceed with Login</Button>
+          </Login>
+        </div>
+      )}
     </>
   );
 }

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { HttpTypes } from "@medusajs/types";
-import { getCurrencySymbol } from "@/pages/_app";
+import { getCurrencySymbol } from "@/utils/currency";
 
 export default function CartItem(props:{
     item: HttpTypes.StoreCartLineItem;

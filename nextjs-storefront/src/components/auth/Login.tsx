@@ -22,6 +22,7 @@ import {
   FormMessage,
 } from "../ui/form";
 import { useLoginMutation, ZLoginSchema } from "./useLoginMutation";
+import Signup from "./Signup";
 
 export default function Login(props: PropsWithChildren) {
   const loginMutation = useLoginMutation();
@@ -40,7 +41,11 @@ export default function Login(props: PropsWithChildren) {
           <Form {...loginForm}>
             <form
               onSubmit={loginForm.handleSubmit(async function (values) {
-                await loginMutation.mutateAsync(values);
+                try {
+                  await loginMutation.mutateAsync(values);
+                } catch (error) {
+                  console.log("Login failed:", error);
+                }
               })}
               className="space-y-8"
             >
@@ -83,6 +88,9 @@ export default function Login(props: PropsWithChildren) {
                 />
               </div>
               <DialogFooter>
+                <Signup>
+                  <Button variant="ghost">Signup</Button>
+                </Signup>
                 <Button type="submit" disabled={loginMutation.isPending}>
                   {loginMutation.isPending ? "Logging in..." : "Login"}
                 </Button>
