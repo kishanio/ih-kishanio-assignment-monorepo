@@ -16,8 +16,12 @@ export default function ProductCard(props: {
 }) {
   const plugin = useRef(
     Autoplay({
-      delay: Math.floor(Math.random() * (5000 - 500 + 1)) + 500,
+      delay: Math.floor(Math.random() * (3000 - 1000 + 1)) + 1000,
     })
+  );
+
+  const remainingImages = props.product.images?.filter(
+    (image) => image.url !== props.product.thumbnail
   );
 
   return (
@@ -44,7 +48,7 @@ export default function ProductCard(props: {
               </Card>
             </CarouselItem>
           )}
-          {props.product.images?.map(function (image, imageIdx) {
+          {remainingImages?.map(function (image, imageIdx) {
             return (
               <CarouselItem key={`${props.product.id}-${image.id}`}>
                 <Card className="py-0">

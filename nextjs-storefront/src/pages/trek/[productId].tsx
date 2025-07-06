@@ -23,6 +23,9 @@ export const getServerSideProps = getServerSidePropsWithCommonProps(
 export default function TrekPage(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
+  const remainingImages = props.product.images?.filter(
+    (image) => image.url !== props.product.thumbnail
+  );
   return (
     <>
       <div className="grid grid-cols-3 gap-4 h-96 mb-6">
@@ -40,7 +43,7 @@ export default function TrekPage(
             <>
               <div className="relative h-[calc(50%-8px)] overflow-hidden rounded-lg">
                 <Image
-                  src={props.product.images[0]?.url || ""}
+                  src={remainingImages?.[0]?.url || ""}
                   alt={`${props.product.title} Image 1`}
                   fill
                   className="object-cover"
@@ -50,8 +53,8 @@ export default function TrekPage(
               <div className="relative h-[calc(50%-8px)] overflow-hidden rounded-lg">
                 <Image
                   src={
-                    props.product.images[1]?.url ||
-                    props.product.images[0]?.url ||
+                    remainingImages?.[1]?.url ||
+                    remainingImages?.[0]?.url ||
                     ""
                   }
                   alt={`${props.product.title} Image 2`}
